@@ -45,4 +45,14 @@ points:
 You should upload your code to a public repo and send us the link when you
 consider it ready. Good luck!
 
-## XXX
+## Run it
+Run the server with:
+docker network create default_network
+    $ uvicorn main:app --reload
+
+http://0.0.0.0:8000/docs
+
+## References
+* https://fastapi.tiangolo.com/es/tutorial/sql-databases/
+* https://pydantic-docs.helpmanual.io/
+* https://alembic.sqlalchemy.org/en/latest/

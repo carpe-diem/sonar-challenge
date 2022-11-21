@@ -1,0 +1,23 @@
+version: '3'
+services:
+  sonarapi:
+    container_name: sonarapi
+    restart: always
+    build: .
+    ports:
+      - '8000:8000'
+    links:
+      - sonardb
+  sonardb:
+    image: 'postgres:latest'
+    container_name: sonardb
+    environment:
+      POSTGRES_PASSWORD: sonar
+      POSTGRES_USER: sonar
+      POSTGRES_DB: sonar
+    ports:
+      - "5432:5432"
+networks:
+  default:
+    external: true
+    name: default_network

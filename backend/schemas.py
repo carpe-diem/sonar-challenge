@@ -4,13 +4,13 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
-class ActivityLogsBase(BaseModel):
+class ActivityLogsBaseSchema(BaseModel):
     id: str
     title:str
     description:str
 
 
-class ActivityLogs(ActivityLogsBase):
+class ActivityLogsSchema(ActivityLogsBaseSchema):
     id: int
     owner_id: int
 
@@ -18,19 +18,19 @@ class ActivityLogs(ActivityLogsBase):
         orm_mode = True
 
 
-class ActivityLogsCreate(ActivityLogsBase):
+class ActivityLogsCreateSchema(ActivityLogsBaseSchema):
     pass
 
 
-class PostBase(BaseModel):
+class PostBaseSchema(BaseModel):
     title: str
     description: Optional[str] = None
     imageSrc: str
     created: datetime
-    activity_logs: List[ActivityLogs]
+    activity_logs: List[ActivityLogsSchema]
 
 
-class Post(PostBase):
+class PostSchema(PostBaseSchema):
     id: int
     owner_id: int
 
@@ -39,25 +39,25 @@ class Post(PostBase):
         orm_mode = True
 
 
-class PostCreate(PostBase):
+class PostCreateSchema(PostBaseSchema):
     pass
 
 
-class UserBase(BaseModel):
+class UserBaseSchema(BaseModel):
     username: str
 
 
-class User(UserBase):
+class UserSchema(UserBaseSchema):
     id: int
-    posts: List[Post] = []
+    posts: List[PostSchema] = []
 
     class Config:
         orm_mode = True
 
 
-class UserCreate(UserBase):
-    pass
+class UserCreateSchema(UserBaseSchema):
+    password: str
 
 
-class Token(BaseModel):
+class TokenSchema(BaseModel):
     access_token: str

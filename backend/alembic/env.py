@@ -8,8 +8,6 @@ from alembic import context
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-SQLALCHEMY_DATABASE_URL = "postgresql://sonar:sonar@localhost:5432/sonar"
-config.set_main_option('sqlalchemy.url', SQLALCHEMY_DATABASE_URL)
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
@@ -17,7 +15,14 @@ if config.config_file_name is not None:
 
 
 import os, sys
-sys.path.append(os.getcwd())
+from dotenv import load_dotenv
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+sys.path.append(BASE_DIR)
+config.set_main_option("sqlalchemy.url", os.environ["SQLALCHEMY_DATABASE_URL"])
+
+
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel

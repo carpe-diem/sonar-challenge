@@ -42,9 +42,10 @@ class ActivityLogs(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
+    post_id = Column(Integer, ForeignKey("posts.id"))
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
     interaction_type = Column(Enum(InteractionType))
 
-    user_id = relationship("User")
+    user = relationship("User")
     post = relationship("Post", back_populates="activity_logs")
 

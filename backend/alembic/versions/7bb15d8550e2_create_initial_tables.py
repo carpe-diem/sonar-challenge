@@ -31,7 +31,11 @@ def upgrade() -> None:
     op.create_table('activity_logs',
     sa.Column('id', sa.INTEGER(), autoincrement=True, nullable=False),
     sa.Column('timestamp', postgresql.TIMESTAMP(), autoincrement=False, nullable=True),
+    sa.Column('user_id', sa.INTEGER(), autoincrement=False, nullable=True),
+    sa.Column('post_id', sa.INTEGER(), autoincrement=False, nullable=True),
     sa.Column('interaction_type', postgresql.ENUM('Like', 'View', name='interactiontype'), autoincrement=False, nullable=True),
+    sa.ForeignKeyConstraint(['post_id'], ['posts.id'], name='activity_logs_posts_id_fkey'),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], name='activity_logs_users_id_fkey'),
     sa.PrimaryKeyConstraint('id', name='activity_logs_pkey')
     )
     op.create_index('ix_activity_logs_id', 'activity_logs', ['id'], unique=False)

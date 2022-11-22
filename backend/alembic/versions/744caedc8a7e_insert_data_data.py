@@ -23,8 +23,6 @@ GENERIC_PASSWORD = 'sonar1234'
 
 
 def upgrade() -> None:
-    meta = sa.MetaData(bind=op.get_bind())
-    users_tbl = sa.Table('users', meta)
     salt = os.urandom(32)
     key = hashlib.pbkdf2_hmac('sha256', GENERIC_PASSWORD.encode('utf-8'), salt, 100000) 
     encodedSalt = base64.b64encode(salt)

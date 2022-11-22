@@ -4,4 +4,6 @@ uvicorn==0.20
 psycopg2
 alembic==1.8.1
 sqlalchemy
+python-multipart
 python-dotenv
+faker

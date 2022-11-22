@@ -49,7 +49,7 @@ class UserBaseSchema(BaseModel):
 
 class UserSchema(UserBaseSchema):
     id: int
-    posts: List[PostSchema] = []
+    # posts: List[PostSchema] = []
 
     class Config:
         orm_mode = True

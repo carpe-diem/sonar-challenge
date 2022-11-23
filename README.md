@@ -48,22 +48,28 @@ consider it ready. Good luck!
 ## Run it
 
 ### Backend
+Create enviroments
+    cp backend/.env.example backend/.env
+
 Run the server with:
-    $ uvicorn main:app --reload
+    backend/ $ pip install -r requeirements.txt
+    backend/ $ alembic upgrade head
+    backend/ $ uvicorn main:app --reload
 
-Docker:
-    $ docker-compose build
-    $ docker-compose up -d
+or Docker:
+    backend/ $ docker-compose build
+    backend/ $ docker-compose up -d
 
-http://0.0.0.0:8000/docs
+Docker runs migrations. 
+
 
 ### FrontEnd
-    $ npm i
-    $ npm run dev
+    frontend/ $ npm i
+    frontend/ $ npm run dev
 
 ### URLs
 Frontend -> http://0.0.0.0:3000
-Backend -> http://0.0.0.0:8000
+Backend -> http://0.0.0.0:8000 & http://0.0.0.0:8000/docs
 
 ### preloaded users
 Username: user1, user2 ... user2000

@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import Depends, FastAPI, HTTPException,Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
 import crud, models,security
 from database import SessionLocal, engine
@@ -48,11 +48,15 @@ async def get_posts(db: Session = Depends(get_db)):
     return crud.get_all_posts(db)
 
 
-@app.post("/login", response_model=TokenSchema)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+from pydantic import BaseModel
+class Login(BaseModel):
+    username: str
+    password: str
 
-    db_user = crud.get_user_by_username(db, username=form_data.username)
-    if not (security.verify_hash(form_data.password, db_user.salt).decode('utf-8') == db_user.password):
+@app.post("/login", response_model=TokenSchema)
+async def login_for_access_token(request:Login, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_username(db, username=request.username)
+    if not (security.verify_hash(request.password, db_user.salt).decode('utf-8') == db_user.password):
         raise HTTPException(
             status_code=401,
             detail="Incorrect username or password",

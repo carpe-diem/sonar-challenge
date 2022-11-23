@@ -1,15 +1,20 @@
-import React, {useState
-} from 'react';
-import axios from 'axios';
+import React, {useState, useEffect} from 'react';
 import { useRouter } from "next/router";
+import axios from 'axios';
 
 
 export default function LoginPage() {
-  const router = useRouter();
+    const router = useRouter();
     const [credentials, setCredentials] = useState({
         username:"",
         password:""
     })
+
+    useEffect(() => {
+        if (sessionStorage.getItem('token')){
+          router.push('/');
+        }
+      }, []);
     const handleChange = (e)=>{
         setCredentials({
             ...credentials,
@@ -22,6 +27,7 @@ export default function LoginPage() {
          const response = await axios.post('http://127.0.0.1:8000/login', credentials);
          console.log(response);
          if(response.status == 200){
+            sessionStorage.setItem('token', response.data.access_token)
             router.push('/');
          }
 

@@ -46,12 +46,21 @@ You should upload your code to a public repo and send us the link when you
 consider it ready. Good luck!
 
 ## Run it
+
+### Backend
 Run the server with:
-docker network create default_network
     $ uvicorn main:app --reload
+
+Docker:
+    $ docker-compose build
+    $ docker-compose up -d
 
 http://0.0.0.0:8000/docs
 
+### FrontEnd
+    $ npm i
+    $ npm run dev
+    
 ## References
 * https://fastapi.tiangolo.com/es/tutorial/sql-databases/
 * https://pydantic-docs.helpmanual.io/

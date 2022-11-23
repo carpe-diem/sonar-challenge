@@ -3,11 +3,11 @@ from fastapi import Depends, FastAPI, HTTPException, Request
 from sqlalchemy.orm import Session
 import crud, models,security
 from database import SessionLocal, engine
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from datetime import timedelta
 
-from schemas import TokenSchema, PostSchema
+from schemas import TokenSchema, PostSchema, LoginSchema
 
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -43,20 +43,15 @@ async def heathckeck() -> dict:
 
 
 from jwt import JWTBearer
-@app.get("/", dependencies=[Depends(JWTBearer())])
+@app.get("/posts", dependencies=[Depends(JWTBearer())])
 async def get_posts(db: Session = Depends(get_db)):
     return crud.get_all_posts(db)
 
 
-from pydantic import BaseModel
-class Login(BaseModel):
-    username: str
-    password: str
-
 @app.post("/login", response_model=TokenSchema)
-async def login_for_access_token(request:Login, db: Session = Depends(get_db)):
+async def login_for_access_token(request:LoginSchema, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_username(db, username=request.username)
-    if not (security.verify_hash(request.password, db_user.salt).decode('utf-8') == db_user.password):
+    if db_user is None or not (security.verify_hash(request.password, db_user.salt).decode('utf-8') == db_user.password):
         raise HTTPException(
             status_code=401,
             detail="Incorrect username or password",
@@ -70,7 +65,7 @@ async def login_for_access_token(request:Login, db: Session = Depends(get_db)):
     return {"access_token": access_token}
 
 
-@app.post("/{post_id}", dependencies=[Depends(JWTBearer())], response_model=PostSchema)
+@app.get("/post/{post_id}", dependencies=[Depends(JWTBearer())], response_model=PostSchema)
 def get_post(post_id: int, db: Session = Depends(get_db)):
     return crud.get_post(db=db, post_id=post_id)
 

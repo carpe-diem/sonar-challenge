@@ -27,13 +27,13 @@ class PostBaseSchema(BaseModel):
     description: Optional[str] = None
     imageSrc: str
     created: datetime
-    activity_logs: List[ActivityLogsSchema]
+    likes: int
+    
 
 
 class PostSchema(PostBaseSchema):
     id: int
     owner_id: int
-
 
     class Config:
         orm_mode = True

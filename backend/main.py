@@ -1,16 +1,13 @@
 from typing import List
 from fastapi import Depends, FastAPI, HTTPException,Request
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
 import crud, models,security
 from database import SessionLocal, engine
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime, timedelta
-from jwt import decodeJWT
-import re
+from datetime import timedelta
 
-from schemas import UserCreateSchema, UserSchema, TokenSchema
+from schemas import TokenSchema, PostSchema
 
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -45,14 +42,11 @@ async def heathckeck() -> dict:
     return {"message": 'ok'}
 
 
-# @app.post("/login/", response_model=UserSchema)
-# def create_user(user: UserCreateSchema, db: Session = Depends(get_db)):
-#     db_user = crud.get_user_by_username(db, username=user.username)
-#     if db_user:
-#         if (security.verify_hash(user.password, db_user.salt).decode('utf-8') == db_user.password):
-#             return db_user
-    
-#     raise HTTPException(status_code=400, detail="Invalid Login")
+from jwt import JWTBearer
+@app.get("/", dependencies=[Depends(JWTBearer())])
+async def get_posts(db: Session = Depends(get_db)):
+    return crud.get_all_posts(db)
+
 
 @app.post("/login", response_model=TokenSchema)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
@@ -70,3 +64,9 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": db_user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token}
+
+
+@app.post("/{post_id}", dependencies=[Depends(JWTBearer())], response_model=PostSchema)
+def get_post(post_id: int, db: Session = Depends(get_db)):
+    return crud.get_post(db=db, post_id=post_id)
+

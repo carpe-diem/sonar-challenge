@@ -1,8 +1,9 @@
 import datetime
 import enum
 
-from sqlalchemy import DateTime, Column, Enum, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import DateTime, Column, Enum, ForeignKey, Integer, String,select,func, and_
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import relationship, column_property
 
 from database import Base
 
@@ -35,6 +36,10 @@ class Post(Base):
 
     owner = relationship("User", back_populates="posts")
     activity_logs = relationship("ActivityLogs", back_populates="post") 
+
+    @hybrid_property
+    def likes(self):
+        return len([x for x in self.activity_logs if x.interaction_type == InteractionType.Like])
 
 
 class ActivityLogs(Base):

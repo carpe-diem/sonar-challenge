@@ -60,7 +60,15 @@ http://0.0.0.0:8000/docs
 ### FrontEnd
     $ npm i
     $ npm run dev
-    
+
+### URLs
+Frontend -> http://0.0.0.0:3000
+Backend -> http://0.0.0.0:8000
+
+### preloaded users
+Username: user1, user2 ... user2000
+Password: sonar1234 (For all)
+
 ## References
 * https://fastapi.tiangolo.com/es/tutorial/sql-databases/
 * https://pydantic-docs.helpmanual.io/
